@@ -1,34 +1,68 @@
-import React from "react";
+import React,{useLayoutEffect, useState} from "react";
 import {StyleSheet, Text, View, TouchableOpacity, FlatList} from "react-native";
 import Colors from '../constants/Colors';
 import {Ionicons} from "@expo/vector-icons";
 
 
-const ListButtton = ({title, color, navigation}) => {
+const ListButtton = ({title, color, onPress, onDelete}) => {
     return(
-    <TouchableOpacity onPress={() => {navigation.navigate("ToDoList")}} style={[styles.itemContainer, {backgroundColor:color}]}>
+    <TouchableOpacity 
+     style={[styles.itemContainer, {backgroundColor:color}]}
+     onPress={onPress}
+     >
          <View><Text style={styles.itemTitle}>{title}</Text></View>
          <View style={{flexDirection:"row"}}>
             <TouchableOpacity onPress={()=>{}}>
                <Ionicons name="options-outline" size={24} color="white"/>
             </TouchableOpacity>
-            <TouchableOpacity onPress={()=>{}}>
+            <TouchableOpacity onPress={onDelete}>
                <Ionicons name="trash-outline" size={24} color="white"/>
             </TouchableOpacity>
          </View>
      </TouchableOpacity> );
 }
+
+const renderAddListIcon= (addItem) =>{
+    return(
+        <TouchableOpacity onPress={() => addItem({title:"Title", color:Colors.orange})} >
+             <Text style={styles.icon}>+</Text>
+        </TouchableOpacity>
+    )
+}
  export default ({navigation}) =>{
+     const [lists, setLists]= useState([
+        {title: "School", color:Colors.red},
+        {title:"Work", color:Colors.green},
+        {title:"Fun", color:Colors.blue}
+
+     ]);
+    
+     const addItemToLists = (item) =>{
+         lists.push(item);
+         setLists([...lists]);
+     }
+
+     const removeItemFromLists = (index) =>{
+         lists.splice(index,1);
+         setLists([...lists]);
+     }
+     useLayoutEffect (() =>{
+         navigation.setOptions({
+             headerRight:() => renderAddListIcon(addItemToLists)
+         })
+     })
      return(
      <View style ={styles.container}>
-         <FlatList data={[{title: "School", color:Colors.red},
-          {title:"Work", color:Colors.green},
-          {title:"Fun", color:Colors.blue},
-
-          ]}
+         <FlatList data={lists}
              renderItem={({item:{title,color}, index})=>{
                   return(
-                    <ListButtton title={title} color={color} navigation={navigation} />
+                    <ListButtton 
+                    title={title} 
+                    color={color} 
+                    navigation={navigation} 
+                    onPress ={() => {navigation.navigate("ToDoList", {title,color})}}
+                      onDelete = {() => removeItemFromLists(index)}  
+                    />
                   );
              }}
          />

@@ -1,4 +1,3 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer} from '@react-navigation/native';
@@ -18,7 +17,18 @@ export default function App() {
     <NavigationContainer>
     <Stack.Navigator>
     <Stack.Screen name="Fire ToDo" component={Home}/>
-    <Stack.Screen name="ToDoList" component={ToDoList}/>
+    <Stack.Screen name="ToDoList" 
+    component={ToDoList}
+     options={({route})=>{
+       return ({
+         title:route.params.title,
+         headerStyle:{
+           backgroundColor:route.params.color
+         },
+         headerTintColor:"white"
+       })
+     }}
+    />
 
     </Stack.Navigator>
     </NavigationContainer>
