@@ -37,20 +37,7 @@ const renderAddListIcon= (addItem) =>{
 
      ]);
     
-     const addItemToLists = (item) =>{
-         lists.push(item);
-         setLists([...lists]);
-     }
-
-     const removeItemFromLists = (index) =>{
-         lists.splice(index,1);
-         setLists([...lists]);
-     }
-     useLayoutEffect (() =>{
-         navigation.setOptions({
-             headerRight:() => renderAddListIcon(addItemToLists)
-         })
-     })
+     
      return(
      <View style ={styles.container}>
          <FlatList data={lists}
