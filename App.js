@@ -3,7 +3,9 @@ import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from "@react-navigation/stack";
 import Home from "./screens/Home";
+import EditList from './screens/EditList';
 import ToDoList from './screens/ToDoList';
+import Colors from './constants/Colors';
 const Stack = createStackNavigator();
 
 const FireTodoApp = () =>{
@@ -29,7 +31,20 @@ export default function App() {
        })
      }}
     />
+     <Stack.Screen 
+        name="Edit" 
+        component={EditList}
+        options={({route})=>{
+       return ({
+         title: route.params.title ? `Edit ${route.params.title} list` : "Create new list",
+         headerStyle:{
+           backgroundColor:route.params.color || Colors.blue
+         },
+         headerTintColor:"white"
+       })
+     }}
 
+     />
     </Stack.Navigator>
     </NavigationContainer>
   );
