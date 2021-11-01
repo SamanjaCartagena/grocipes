@@ -3,6 +3,7 @@ import React,{ useState} from "react";
 import {StyleSheet, Text, View, TextInput, TouchableOpacity} from "react-native";
 import Colors from '../constants/Colors';
 import ColorSelector from "../components/ColorSelector";
+import Button from "../components/Button";
 
 const colorList =[
    "blue",
@@ -59,16 +60,16 @@ export default ({navigation, route}) =>{
 
 
         </View>
-        <TouchableOpacity style={styles.saveButton} onPress={() =>{
-            if(title.length > 1){
-               route.params.saveChanges({title, color});
-               navigation.dispatch(CommonActions.goBack());
-            }else{
-               setValidity(false);
-            }
-        }}>
-             <Text style={{color:"white", fontSize:24, fontWeight:"bold" }}>Save</Text>
-        </TouchableOpacity>
+      <Button text="Save" onPress={() => {
+          if(title.length > 1){
+              route.params.saveChanges({title, color});
+              navigation.dispatch(CommonActions.goBack());
+
+          }
+          else{
+              setValidity(false);
+          }
+      }}/>
         
     </View>);
 }
