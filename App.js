@@ -9,6 +9,8 @@ import Settings from "./screens/Settings";
 import Colors from "./constants/Colors";
 import firebase from "firebase/app";
 import "firebase/firestore";
+import { LogBox } from 'react-native';
+
 
 const Stack = createStackNavigator();
 const AuthStack = createStackNavigator();
@@ -78,9 +80,13 @@ export default function App() {
         </NavigationContainer>
     );
     }
-const firebaseConfig = {
-};
-
+    LogBox.ignoreLogs(['Setting a timer for a long period of time'])
+    LogBox.ignoreLogs([
+      'Non-serializable values were found in the navigation state',
+    ]);
+    const firebaseConfig = {
+    
+    };
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 } else {

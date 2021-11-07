@@ -57,7 +57,7 @@ export default ({ navigation, route }) => {
                     }}
                     placeholder={"New List Name"}
                     maxLength={30}
-                    style={[styles.input, { outline: "none" }]}
+                    style={[styles.input, ]}
                 />
                 <Text style={styles.label}>Choose Color</Text>
                 <ColorSelector
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     },
     input: {
         color: Colors.darkGray,
-        borderBottomColor: Colors.lightGray,
+      //  borderBottomColor: Colors.lightGray,
         borderBottomWidth: 0.5,
         marginHorizontal: 5,
         padding: 3,
