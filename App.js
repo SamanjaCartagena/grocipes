@@ -1,88 +1,91 @@
-import React, {useState} from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from "@react-navigation/stack";
+import React, { useState, useEffect } from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
 import Home from "./screens/Home";
-import EditList from './screens/EditList';
-import ToDoList from './screens/ToDoList';
-import Colors from './constants/Colors';
-import * as firebase from "firebase";
+import ToDoList from "./screens/ToDoList";
+import EditList from "./screens/EditList";
 import Login from "./screens/Login";
-
+import Settings from "./screens/Settings";
+import Colors from "./constants/Colors";
+import firebase from "firebase/app";
+import "firebase/firestore";
 
 const Stack = createStackNavigator();
 const AuthStack = createStackNavigator();
-const AuthScreens = () =>{
-  return(
-    <AuthStack.Navigator>
-        <AuthStack.Screen name="Login" component={Login}/>
-    </AuthStack.Navigator>
-  );
-}
 
-
-
-
-const Screens =() => {
- return(
-  <Stack.Navigator>
-  <Stack.Screen name="Fire ToDo" component={Home}/>
-  <Stack.Screen name="ToDoList" 
-  component={ToDoList}
-   options={({route})=>{
-     return ({
-       title:route.params.title,
-       headerStyle:{
-         backgroundColor:route.params.color
-       },
-       headerTintColor:"white"
-     })
-   }}
-  />
-   <Stack.Screen 
-      name="Edit" 
-      component={EditList}
-      options={({route})=>{
-     return ({
-       title: route.params.title ? `Edit ${route.params.title} list` : "Create new list",
-       headerStyle:{
-         backgroundColor:route.params.color || Colors.blue
-       },
-       headerTintColor:"white"
-     })
-   }}
-
-   />
-  </Stack.Navigator>
- )
-}
-
-const FireTodoApp = () =>{
-  return(<View style={styles.container}>
-    <Text>Hello Fire App Devs!</Text>
-  </View>);
-}
-
+const AuthScreens = () => {
+    return (
+        <AuthStack.Navigator>
+            <AuthStack.Screen name="Login" component={Login} />
+        </AuthStack.Navigator>
+    );
+};
+const Screens = () => {
+    return (
+        <Stack.Navigator>
+            <Stack.Screen name="Fire App" component={Home} />
+            <Stack.Screen name="Settings" component={Settings} />
+            <Stack.Screen
+                name="ToDoList"
+                component={ToDoList}
+                options={({ route }) => {
+                    return {
+                        title: route.params.title,
+                        headerStyle: {
+                            backgroundColor: route.params.color,
+                        },
+                        headerTintColor: "white",
+                    };
+                }}
+            />
+            <Stack.Screen
+                name="Edit"
+                component={EditList}
+                options={({ route }) => {
+                    return {
+                        title: route.params.title
+                            ? `Edit ${route.params.title} list`
+                            : "Create new list",
+                        headerStyle: {
+                            backgroundColor: route.params.color || Colors.blue,
+                        },
+                        headerTintColor: "white",
+                    };
+                }}
+            />
+        </Stack.Navigator>
+    );
+};
 export default function App() {
-  const [isAuthenticated, setAuthenticated] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    useEffect(() => {
+        if (firebase.auth().currentUser) {
+            setIsAuthenticated(true);
+        }
+        firebase.auth().onAuthStateChanged((user) => {
+            console.log("Checking auth state...");
+            if (user) {
+                setIsAuthenticated(true);
+            } else {
+                setIsAuthenticated(false);
+            }
+        });
+    }, []);
 
-  return (
-    <NavigationContainer>
-   
-     {isAuthenticated ? <Screens /> : <AuthScreens />}
-    </NavigationContainer>
-  );
-
+    return (
+        <NavigationContainer>
+            {isAuthenticated ? <Screens /> : <AuthScreens />}
+        </NavigationContainer>
+    );
+    }
 const firebaseConfig = {
-  apiKey: "AIzaSyDHGV4cX7xCwDyAgA-w3m4FEZPPYmKCNiQ",
-  authDomain: "grocipes-b1f52.firebaseapp.com",
-  projectId: "grocipes-b1f52",
-  storageBucket: "grocipes-b1f52.appspot.com",
-  messagingSenderId: "957148993497",
-  appId: "1:957148993497:web:b9ccbbb4e01774715febc8"
 };
 
+if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
+} else {
+  firebase.app(); // if already initialized, use that one
 }
+
 
 //firebase.initializeApp(firebaseConfig);
